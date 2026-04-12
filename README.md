@@ -1,1 +1,1 @@
-# choreo-api-orchestrator-devops
+# Choreo API Orchestrator DevOps Project
