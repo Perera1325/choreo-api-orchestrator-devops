@@ -17,6 +17,23 @@ app.get("/user", (req, res) => {
   res.json({ id: 1, name: "Vinod" });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`[USER-SERVICE] Running on port ${PORT}`);
+});
+
+// Graceful Shutdown Logic
+process.on("SIGTERM", () => {
+  console.log("[USER-SERVICE] SIGTERM received. Closing server cleanly...");
+  server.close(() => {
+    console.log("[USER-SERVICE] Server closed. Process exiting.");
+    process.exit(0);
+  });
+});
+
+process.on("SIGINT", () => {
+  console.log("[USER-SERVICE] SIGINT received. Closing server cleanly...");
+  server.close(() => {
+    console.log("[USER-SERVICE] Server closed. Process exiting.");
+    process.exit(0);
+  });
 });

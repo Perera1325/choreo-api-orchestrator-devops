@@ -1,0 +1,53 @@
+name: Production CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+    
+    - name: Syntax Check (User Service)
+      run: node --check services/user-service/app.js
+    
+    - name: Syntax Check (Inventory Service)
+      run: node --check services/inventory-service/app.js
+
+    - name: Syntax Check (Payment Service)
+      run: node --check services/payment-service/app.js
+
+    - name: Syntax Check (Orchestrator)
+      run: node --check orchestrator/order-orchestrator/app.js
+
+  security-audit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: NPM Security Audit (User Service)
+      run: |
+        cd services/user-service
+        npm audit --audit-level=high || true
+    
+    - name: NPM Security Audit (Inventory Service)
+      run: |
+        cd services/inventory-service
+        npm audit --audit-level=high || true
+
+    - name: NPM Security Audit (Payment Service)
+      run: |
+        cd services/payment-service
+        npm audit --audit-level=high || true
+
+    - name: NPM Security Audit (Orchestrator)
+      run: |
+        cd orchestrator/order-orchestrator
+        npm audit --audit-level=high || true

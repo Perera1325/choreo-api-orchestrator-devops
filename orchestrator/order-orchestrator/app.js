@@ -118,6 +118,23 @@ app.post("/order", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`[ORCHESTRATOR] Running on port ${PORT}`);
+});
+
+// Graceful Shutdown Logic
+process.on("SIGTERM", () => {
+  console.log("[ORCHESTRATOR] SIGTERM received. Closing server cleanly...");
+  server.close(() => {
+    console.log("[ORCHESTRATOR] Server closed. Process exiting.");
+    process.exit(0);
+  });
+});
+
+process.on("SIGINT", () => {
+  console.log("[ORCHESTRATOR] SIGINT received. Closing server cleanly...");
+  server.close(() => {
+    console.log("[ORCHESTRATOR] Server closed. Process exiting.");
+    process.exit(0);
+  });
 });

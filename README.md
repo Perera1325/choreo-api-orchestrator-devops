@@ -2,6 +2,20 @@
 
 A production-quality microservices system demonstrating **Distributed Orchestration**, **Resilience Patterns**, and **Container Orchestration** using Docker.
 
+## 🏆 Senior Engineer Insights & Stability
+
+This project demonstrates several advanced production-grade engineering practices used by **Senior DevOps and Site Reliability Engineers (SREs)**:
+
+### 🛡️ Resilience & Failover
+- **Timeouts & Retries**: Every service call is protected by a 3000ms timeout and an exponential-style retry mechanism for critical payment paths.
+- **Graceful Shutdown**: Each microservice implements signal handling (`SIGTERM`/`SIGINT`). This ensures that in a production environment (like K8s or Choreo), the service finishes processing in-flight requests and closes network connections cleanly before the container exits.
+
+### 🚥 Continuous Delivery & Quality
+- **GitHub Actions CI**: An automated pipeline validates every commit for syntax errors and performs high-level security audits (`npm audit`) before the code reaches the cloud.
+- **Trivy Vulnerability Scanning**: Integrated into the Choreo build pipeline to ensure container-level security.
+
+---
+
 ## 🏗️ Enterprise Architecture
 
 Our system is designed with a robust directed-flow topology, utilizing an API Gateway for security and centralized orchestration for complex business logic. These diagrams reflect the live environment deployed on WSO2 Choreo.

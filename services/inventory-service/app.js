@@ -33,6 +33,23 @@ app.get("/inventory/:item", (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`[INVENTORY-SERVICE] Running on port ${PORT}`);
+});
+
+// Graceful Shutdown Logic
+process.on("SIGTERM", () => {
+  console.log("[INVENTORY-SERVICE] SIGTERM received. Closing server cleanly...");
+  server.close(() => {
+    console.log("[INVENTORY-SERVICE] Server closed. Process exiting.");
+    process.exit(0);
+  });
+});
+
+process.on("SIGINT", () => {
+  console.log("[INVENTORY-SERVICE] SIGINT received. Closing server cleanly...");
+  server.close(() => {
+    console.log("[INVENTORY-SERVICE] Server closed. Process exiting.");
+    process.exit(0);
+  });
 });
