@@ -35,6 +35,10 @@ app.get("/", (req, res) => {
   res.send("Order Orchestrator Running");
 });
 
+app.get("/health", (req, res) => {
+  res.json({ status: "UP", service: "order-orchestrator", timestamp: new Date().toISOString() });
+});
+
 app.post("/order", async (req, res) => {
   const { userId, item, amount } = req.body;
 

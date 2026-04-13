@@ -8,6 +8,10 @@ app.get("/", (req, res) => {
   res.send("User Service Running");
 });
 
+app.get("/health", (req, res) => {
+  res.json({ status: "UP", service: "user-service", timestamp: new Date().toISOString() });
+});
+
 app.get("/user", (req, res) => {
   console.log("[USER-SERVICE] GET /user request received");
   res.json({ id: 1, name: "Vinod" });

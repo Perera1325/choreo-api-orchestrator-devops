@@ -10,6 +10,10 @@ app.get("/", (req, res) => {
   res.send("Payment Service Running");
 });
 
+app.get("/health", (req, res) => {
+  res.json({ status: "UP", service: "payment-service", timestamp: new Date().toISOString() });
+});
+
 app.post("/pay", (req, res) => {
   const { amount, currency, orderId } = req.body;
   console.log(`[PAYMENT-SERVICE] POST /pay request received for order: ${orderId}`);

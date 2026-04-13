@@ -8,6 +8,10 @@ app.get("/", (req, res) => {
   res.send("Inventory Service Running");
 });
 
+app.get("/health", (req, res) => {
+  res.json({ status: "UP", service: "inventory-service", timestamp: new Date().toISOString() });
+});
+
 app.get("/inventory/:item", (req, res) => {
   const item = req.params.item;
   console.log(`[INVENTORY-SERVICE] Checking stock for item: ${item}`);

@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  user-service:
+    build: 
+      context: ./services/user-service
+    container_name: user-service
+    ports:
+      - "8081:8080"
+    networks:
+      - microservices-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  inventory-service:
+    build:
+      context: ./services/inventory-service
+    container_name: inventory-service
+    ports:
+      - "8082:8081"
+    networks:
+      - microservices-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8081/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  payment-service:
+    build:
+      context: ./services/payment-service
+    container_name: payment-service
+    ports:
+      - "8083:8082"
+    networks:
+      - microservices-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8082/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  order-orchestrator:
+    build:
+      context: ./orchestrator/order-orchestrator
+    container_name: order-orchestrator
+    ports:
+      - "8080:8080"
+    environment:
+      - USER_SERVICE_URL=http://user-service:8080
+      - INVENTORY_SERVICE_URL=http://inventory-service:8081
+      - PAYMENT_SERVICE_URL=http://payment-service:8082
+    networks:
+      - microservices-net
+    depends_on:
+      user-service:
+        condition: service_healthy
+      inventory-service:
+        condition: service_healthy
+      payment-service:
+        condition: service_healthy
+
+networks:
+  microservices-net:
+    driver: bridge
