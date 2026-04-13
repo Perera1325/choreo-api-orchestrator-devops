@@ -4,11 +4,14 @@ const app = express();
 const PORT = process.env.PORT || 8081;
 
 app.get("/", (req, res) => {
+  console.log("[INVENTORY-SERVICE] GET / request received");
   res.send("Inventory Service Running");
 });
 
 app.get("/inventory/:item", (req, res) => {
   const item = req.params.item;
+  console.log(`[INVENTORY-SERVICE] Checking stock for item: ${item}`);
+  
   // Mock data for demonstration
   const stockLevels = {
     laptop: 15,
@@ -17,6 +20,7 @@ app.get("/inventory/:item", (req, res) => {
   };
   
   const stock = stockLevels[item.toLowerCase()] || 0;
+  console.log(`[INVENTORY-SERVICE] Stock for ${item}: ${stock}`);
   
   res.json({
     item: item,
@@ -26,5 +30,5 @@ app.get("/inventory/:item", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Inventory Service running on port ${PORT}`);
+  console.log(`[INVENTORY-SERVICE] Running on port ${PORT}`);
 });

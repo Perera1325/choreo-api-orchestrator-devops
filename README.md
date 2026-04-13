@@ -1,10 +1,10 @@
-# Choreo Microservices Orchestration System
+# 🚀 Choreo Microservices Orchestration System
 
-A production-grade microservices architecture demonstrating centralized orchestration, automated DevOps workflows, and seamless deployment on WSO2 Choreo.
+A production-quality microservices system demonstrating **Distributed Orchestration**, **Resilience Patterns**, and **Enterprise Observability** on WSO2 Choreo.
 
-## 🏗️ Architecture Overview
+## 🏗️ System Architecture
 
-The system consists of an Order Orchestrator that coordinates requests across specialized microservices.
+This project simulates a high-scale e-commerce order flow where a central orchestrator manages multiple specialized microservices.
 
 ```mermaid
 graph TD
@@ -15,50 +15,70 @@ graph TD
     Orchestrator --> PaySvc[Payment Service]
 ```
 
-## 🚀 Services Description
+### ⚡ Key Resilience Patterns
+- **Timeouts**: Every service call is protected by a 3000ms Axios timeout to prevent gateway hanging.
+- **Retry Mechanism**: The Payment Service call includes a 2-retry logic to handle transient network issues or cold starts.
+- **Fail-Fast Error Handling**: Returns precise status codes and reasons (e.g., `OUT_OF_STOCK`, `PAYMENT_FAILED`) instead of generic server errors.
 
-| Service | Responsibility | Port | Key Endpoints |
-|---------|----------------|------|---------------|
-| **User Service** | User profile management | 8080 | `GET /user` |
-| **Inventory Service** | Real-time stock tracking | 8081 | `GET /inventory/:item` |
-| **Payment Service** | Transaction processing | 8082 | `POST /pay` |
-| **Order Orchestrator** | Service Coordination | 8080 | `POST /order` |
+## 📊 Enterprise Observability
+Every service implements **Structured Logging**. Logs are prefixed with service names for easy distributed tracing in Choreo's Log Explorer:
+- `[ORCHESTRATOR] ---> Calling payment-service...`
+- `[PAYMENT-SERVICE] Processing payment of 1200 USD...`
+- `[ORCHESTRATOR] <--- Payment service responded successfully.`
 
-## 🛠️ Tech Stack
-- **Runtime**: Node.js 20.x
-- **Framework**: Express.js
-- **HTTP Client**: Axios (with centralized error handling)
-- **Deployment**: WSO2 Choreo Internal Developer Platform
+## 🚀 API Demonstration Flow
 
-## 📦 Local Setup
-
-1. **Clone the repository**
-2. **Install dependencies in each service folder**:
-   ```bash
-   cd services/user-service && npm install
-   cd ../inventory-service && npm install
-   cd ../payment-service && npm install
-   cd ../../orchestrator/order-orchestrator && npm install
-   ```
-3. **Run services**:
-   Each service respects the `PORT` environment variable.
-
-## ☁️ Live Choreo Endpoints (Development)
-
-The system is deployed and active on WSO2 Choreo. You can test the orchestration logic using the following live endpoints:
-
-*   **Order Orchestrator (Gateway)**: [https://ee109b02-dea5-436d-a8b8-e17df34b50b3-dev.e1-us-east-azure.choreoapis.dev/user-service-project/order-orchestrator/v1.0](https://ee109b02-dea5-436d-a8b8-e17df34b50b3-dev.e1-us-east-azure.choreoapis.dev/user-service-project/order-orchestrator/v1.0)
-*   **User Service**: `https://ee109b02-dea5-436d-a8b8-e17df34b50b3-dev.e1-us-east-azure.choreoapis.dev/user-service-project/user-service/v1.0`
-*   **Inventory Service**: `https://ee109b02-dea5-436d-a8b8-e17df34b50b3-dev.e1-us-east-azure.choreoapis.dev/user-service-project/inventory-service/v1.0`
-*   **Payment Service**: `https://ee109b02-dea5-436d-a8b8-e17df34b50b3-dev.e1-us-east-azure.choreoapis.dev/user-service-project/payment-service/v1.0`
-
-## 🧪 Testing the Orchestration
-Use a tool like `curl` or Postman to hit the Orchestrator's `/order` endpoint:
-```bash
-curl -X POST https://ee109b02-dea5-436d-a8b8-e17df34b50b3-dev.e1-us-east-azure.choreoapis.dev/user-service-project/order-orchestrator/v1.0/order \
-     -H "Content-Type: application/json" \
-     -d '{"userId": "1", "item": "laptop", "amount": 1200}'
+### 1. Success Case (`POST /order`)
+**Request Body:**
+```json
+{
+  "userId": "1",
+  "item": "laptop",
+  "amount": 1200
+}
+```
+**Response:** `200 OK`
+```json
+{
+  "orderStatus": "CONFIRMED",
+  "user": { "id": 1, "name": "Vinod" },
+  "inventory": { "item": "laptop", "stock": 15 },
+  "payment": { "status": "success", "transactionId": "TXN..." }
+}
 ```
 
+### 2. Out of Stock Case
+**Response:** `400 Bad Request`
+```json
+{
+  "orderStatus": "FAILED",
+  "reason": "OUT_OF_STOCK",
+  "item": "mouse"
+}
+```
+
+### 3. Payment Failure Case
+**Response:** `402 Payment Required`
+```json
+{
+  "orderStatus": "FAILED",
+  "reason": "PAYMENT_FAILED",
+  "details": "timeout of 3000ms exceeded"
+}
+```
+
+## 🛠️ Infrastructure & Setup
+
+### Environment Variables
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `PORT` | Local service port | 8080 |
+| `USER_SERVICE_URL` | Endpoint for user-service | `http://localhost:8080` |
+| `INVENTORY_SERVICE_URL` | Endpoint for inventory-service | `http://localhost:8081` |
+| `PAYMENT_SERVICE_URL` | Endpoint for payment-service | `http://localhost:8082` |
+
+### Choreo Deployment
+This project is optimized for WSO2 Choreo. Each directory (`services/`, `orchestrator/`) maps to an independent **Service Component** using the **NodeJS** build preset.
+
 ---
-*Created with ❤️ by Antigravity AI for Perera1325*
+*Developed by Perera1325 as a Cloud DevOps Showcase.*

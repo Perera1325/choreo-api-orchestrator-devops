@@ -6,16 +6,19 @@ app.use(express.json());
 const PORT = process.env.PORT || 8082;
 
 app.get("/", (req, res) => {
+  console.log("[PAYMENT-SERVICE] GET / request received");
   res.send("Payment Service Running");
 });
 
 app.post("/pay", (req, res) => {
   const { amount, currency, orderId } = req.body;
+  console.log(`[PAYMENT-SERVICE] POST /pay request received for order: ${orderId}`);
   
   // Mock payment processing
   const transactionId = "TXN" + Math.random().toString(36).substring(2, 10).toUpperCase();
   
-  console.log(`Processing payment of ${amount} ${currency} for order ${orderId}`);
+  console.log(`[PAYMENT-SERVICE] Processing payment of ${amount} ${currency} for order ${orderId}`);
+  console.log(`[PAYMENT-SERVICE] Transaction successful: ${transactionId}`);
   
   res.json({
     status: "success",
@@ -28,5 +31,5 @@ app.post("/pay", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Payment Service running on port ${PORT}`);
+  console.log(`[PAYMENT-SERVICE] Running on port ${PORT}`);
 });
