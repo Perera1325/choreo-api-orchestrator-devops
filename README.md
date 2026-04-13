@@ -2,29 +2,116 @@
 
 A production-quality microservices system demonstrating **Distributed Orchestration**, **Resilience Patterns**, and **Enterprise Observability** on WSO2 Choreo.
 
-## 🏗️ System Architecture
+## 🏗️ Enterprise Architecture
 
-This project simulates a high-scale e-commerce order flow where a central orchestrator manages multiple specialized microservices.
+Our system is designed with a robust directed-flow topology, utilizing an API Gateway for security and centralized orchestration for complex business logic. These diagrams were validated using the **Choreo Dependency Graph** within the production project.
 
+### High-Level Structural Design
 ```mermaid
 graph TD
-    Client[Client/Explorer] --> Gateway[WSO2 API Gateway]
-    Gateway --> Orchestrator[Order Orchestrator]
-    Orchestrator --> UserSvc[User Service]
-    Orchestrator --> InvSvc[Inventory Service]
-    Orchestrator --> PaySvc[Payment Service]
+    Client[Client Browser/Mobile]
+    
+    subgraph "Public Entry Point"
+        Gateway[WSO2 Choreo API Gateway]
+    end
+
+    subgraph "Logic Orchestration Layer"
+        Orch[Order Orchestrator]
+    end
+
+    subgraph "Microservices Layer"
+        US[User Service]
+        IS[Inventory Service]
+        PS[Payment Service]
+    end
+
+    subgraph "Configuration Management"
+        Env[(.env / Choreo Config)]
+    end
+
+    Client --> Gateway
+    Gateway --> Orch
+    Orch --> US
+    Orch --> IS
+    Orch --> PS
+    
+    Env -.-> Orch
+    Env -.-> US
+    Env -.-> IS
+    Env -.-> PS
+
+    style Gateway fill:#3b82f6,color:#fff,stroke:#1d4ed8,stroke-width:2px
+    style Orch fill:#10b981,color:#fff,stroke:#059669,stroke-width:2px
+    style Env fill:#f59e0b,color:#fff,stroke:#d97706
 ```
 
-### ⚡ Key Resilience Patterns
-- **Timeouts**: Every service call is protected by a 3000ms Axios timeout to prevent gateway hanging.
-- **Retry Mechanism**: The Payment Service call includes a 2-retry logic to handle transient network issues or cold starts.
-- **Fail-Fast Error Handling**: Returns precise status codes and reasons (e.g., `OUT_OF_STOCK`, `PAYMENT_FAILED`) instead of generic server errors.
+### Advanced Layer (Resilience & Observability)
+This view highlights the enterprise patterns implemented: **Timeouts**, **Retry Logic**, and **Distributed Logging**.
 
-## 📊 Enterprise Observability
-Every service implements **Structured Logging**. Logs are prefixed with service names for easy distributed tracing in Choreo's Log Explorer:
-- `[ORCHESTRATOR] ---> Calling payment-service...`
-- `[PAYMENT-SERVICE] Processing payment of 1200 USD...`
-- `[ORCHESTRATOR] <--- Payment service responded successfully.`
+```mermaid
+graph LR
+    subgraph "Traffic Entry"
+        GW[API Gateway]
+    end
+
+    subgraph "Resilient Orchestrator"
+        Orch[Order Orchestrator]
+        Logs[[Structured Logs]]
+    end
+
+    GW --> Orch
+    Orch -.-> Logs
+
+    Orch -- "Timeout: 3000ms" --> US[User Service]
+    Orch -- "Timeout: 3000ms" --> IS[Inventory Service]
+    
+    Orch -- "Retry Strategy (x2)" --> PS[Payment Service]
+    PS -- "Retry on Failure" --> PS
+    
+    IS -- "Error: OUT_OF_STOCK" --> Orch
+    PS -- "Error: PAYMENT_FAILED" --> Orch
+
+    style Logs fill:#eee,stroke:#999
+    style Orch stroke-dasharray: 5 5
+```
+
+### System Sequence Flow (POST /order)
+The following sequence flow details the exact lifecycle of a request, including the success and failure branches:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant G as Choreo Gateway
+    participant O as Orchestrator
+    participant S as Microservices
+
+    C->>G: POST /order
+    G->>O: Forward Request
+    Note over O: Log: [ORCHESTRATOR] Incoming Order
+    
+    O->>S: Call User Service (Validate ID)
+    S-->>O: 200 OK
+    
+    O->>S: Call Inventory (Check Stock)
+    alt Out of Stock
+        S-->>O: 400 OUT_OF_STOCK
+        O-->>C: JSON {"status": "FAILED", "reason": "OUT_OF_STOCK"}
+    else In Stock
+        S-->>O: 200 OK
+    end
+    
+    O->>S: Call Payment (Process)
+    loop Up to 2 Retries
+        S-->>O: Payment Attempt
+    end
+    
+    alt Payment Success
+        O-->>C: 201 Created {"orderId": "..."}
+    else Final Failure
+        O-->>C: 500 PAYMENT_FAILED
+    end
+```
 
 ## 🚀 API Demonstration Flow
 
