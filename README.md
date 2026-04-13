@@ -6,9 +6,13 @@ A production-quality microservices system demonstrating **Distributed Orchestrat
 
 Our system is designed with a robust directed-flow topology, utilizing an API Gateway for security and centralized orchestration for complex business logic. These diagrams reflect the live environment deployed on WSO2 Choreo.
 
+### Enterprise Resource Catalog (Native Graph)
+![Choreo Catalog Graph](./images/choreo_catalog_graph.png)
+*Figure 1: Official Choreo Architecture Diagram showing project boundaries and service dependencies.*
+
 ### High-Level Structural Design
 ![Choreo Project Overview](./images/choreo_overview.png)
-*Figure 1: Live Dependency Graph & Project Overview in WSO2 Choreo.*
+*Figure 2: Live Dependency Graph & Project Overview in WSO2 Choreo.*
 
 ```mermaid
 graph TD
