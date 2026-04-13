@@ -153,7 +153,21 @@ This will:
 3. Start healthchecks for backend services.
 4. Expose the Order Orchestrator on `localhost:8080`.
 
-## 🚀 API Demonstration
+## 📊 Enterprise Observability & CI/CD
+
+Our system utilizes WSO2 Choreo's advanced DevOps capabilities to ensure every deployment is secure, optimized, and verified.
+
+### 🛡️ Automated CI/CD & Security Scan
+![Choreo Build Pipeline](./images/choreo_build_pipeline.png)
+*Figure 4: Automated build action including environment setup, containerization, and Trivy vulnerability scanning.*
+
+Every commit to the `main` branch triggers a multi-stage pipeline:
+1.  **Environment Setup**: Dynamic provisioning of build resources.
+2.  **Build Component**: Native Node.js build and optimization.
+3.  **Security Scan**: INTEGRATED **Trivy** vulnerability scanning for all container layers.
+4.  **Registry Push**: Versioned images pushed to the internal secure registry.
+
+## 🚀 API Demonstration Flow
 
 ### POST /order (Success Case)
 **Endpoint**: `http://localhost:8080/order`
