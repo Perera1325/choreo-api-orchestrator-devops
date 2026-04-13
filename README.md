@@ -43,28 +43,21 @@ graph TD
 3. **Run services**:
    Each service respects the `PORT` environment variable.
 
-## ☁️ Choreo Deployment Guide
+## ☁️ Live Choreo Endpoints (Development)
 
-1. **Connect Repository**: Link your GitHub repo to Choreo.
-2. **Create Components**:
-   - Create 4 separate "Service" components.
-   - Point each to its respective directory (`services/user-service`, etc.).
-   - Use the **NodeJS** build preset.
-3. **Configure Orchestrator Environment**:
-   Set the following environment variables in the Orchestrator's configuration:
-   - `USER_SERVICE_URL`
-   - `INVENTORY_SERVICE_URL`
-   - `PAYMENT_SERVICE_URL`
-4. **Deploy**: Trigger "Build & Deploy" for all components.
+The system is deployed and active on WSO2 Choreo. You can test the orchestration logic using the following live endpoints:
+
+*   **Order Orchestrator (Gateway)**: [https://ee109b02-dea5-436d-a8b8-e17df34b50b3-dev.e1-us-east-azure.choreoapis.dev/user-service-project/order-orchestrator/v1.0](https://ee109b02-dea5-436d-a8b8-e17df34b50b3-dev.e1-us-east-azure.choreoapis.dev/user-service-project/order-orchestrator/v1.0)
+*   **User Service**: `https://ee109b02-dea5-436d-a8b8-e17df34b50b3-dev.e1-us-east-azure.choreoapis.dev/user-service-project/user-service/v1.0`
+*   **Inventory Service**: `https://ee109b02-dea5-436d-a8b8-e17df34b50b3-dev.e1-us-east-azure.choreoapis.dev/user-service-project/inventory-service/v1.0`
+*   **Payment Service**: `https://ee109b02-dea5-436d-a8b8-e17df34b50b3-dev.e1-us-east-azure.choreoapis.dev/user-service-project/payment-service/v1.0`
 
 ## 🧪 Testing the Orchestration
-Use the following payload for the Orchestrator's `POST /order` endpoint:
-```json
-{
-  "userId": "123",
-  "item": "laptop",
-  "amount": 1200
-}
+Use a tool like `curl` or Postman to hit the Orchestrator's `/order` endpoint:
+```bash
+curl -X POST https://ee109b02-dea5-436d-a8b8-e17df34b50b3-dev.e1-us-east-azure.choreoapis.dev/user-service-project/order-orchestrator/v1.0/order \
+     -H "Content-Type: application/json" \
+     -d '{"userId": "1", "item": "laptop", "amount": 1200}'
 ```
 
 ---

@@ -1,0 +1,50 @@
+openapi: 3.0.0
+info:
+  title: Order Orchestrator API
+  description: Orchestrates order requests across User, Inventory, and Payment services.
+  version: 1.0.0
+paths:
+  /order:
+    post:
+      summary: Create a new order
+      description: Orchestrates child service calls to confirm user status, stock, and payment.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - item
+                - amount
+              properties:
+                userId:
+                  type: string
+                  example: "123"
+                item:
+                  type: string
+                  example: "laptop"
+                amount:
+                  type: number
+                  example: 1200
+      responses:
+        '200':
+          description: Order confirmed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderStatus:
+                    type: string
+                  user:
+                    type: object
+                  inventory:
+                    type: object
+                  payment:
+                    type: object
+        '400':
+          description: Order failed (e.g., OUT_OF_STOCK, PAYMENT_FAILED)
+        '500':
+          description: Internal service error
