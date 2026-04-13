@@ -1,32 +1,32 @@
-# 🚀 Choreo Microservices Orchestration (Standalone Version)
+# Choreo Microservices Orchestration (Standalone Version)
 
-A production-quality microservices system demonstrating **Distributed Orchestration**, **Resilience Patterns**, and **Container Orchestration** using Docker.
+This repository contains a production-grade microservices system demonstrating distributed orchestration, resilience patterns, and container orchestration using Docker.
 
-## 🏆 Senior Engineer Insights & Stability
+## Engineering Architecture and System Stability
 
-This project demonstrates several advanced production-grade engineering practices used by **Senior DevOps and Site Reliability Engineers (SREs)**:
+The implementation follows industry-standard engineering practices for distributed systems to ensure reliability and maintainability.
 
-### 🛡️ Resilience & Failover
-- **Timeouts & Retries**: Every service call is protected by a 3000ms timeout and an exponential-style retry mechanism for critical payment paths.
-- **Graceful Shutdown**: Each microservice implements signal handling (`SIGTERM`/`SIGINT`). This ensures that in a production environment (like K8s or Choreo), the service finishes processing in-flight requests and closes network connections cleanly before the container exits.
+### Resilience and Failover Patterns
+- **Timeouts and Retries**: Each service-to-service communication is governed by a 3000ms timeout and an exponential retry mechanism for critical business paths, specifically the payment processing flow.
+- **Graceful Shutdown**: Every microservice implements native signal handling for SIGTERM and SIGINT. This ensures that in production environments such as Kubernetes or WSO2 Choreo, the service completes pending requests and terminates network connections cleanly before the process exits.
 
-### 🚥 Continuous Delivery & Quality
-- **GitHub Actions CI**: An automated pipeline validates every commit for syntax errors and performs high-level security audits (`npm audit`) before the code reaches the cloud.
-- **Trivy Vulnerability Scanning**: Integrated into the Choreo build pipeline to ensure container-level security.
+### Continuous Integration and Deployment Quality
+- **GitHub Actions CI**: An automated pipeline validates the integrity of every commit through syntax verification and high-level security audits using npm audit.
+- **Vulnerability Scanning**: The system is integrated with Trivy for container-level security scanning within the build pipeline.
 
 ---
 
-## 🏗️ Enterprise Architecture
+## System Architecture
 
-Our system is designed with a robust directed-flow topology, utilizing an API Gateway for security and centralized orchestration for complex business logic. These diagrams reflect the live environment deployed on WSO2 Choreo.
+The system utilizes a directed-flow topology with a centralized API Gateway and an orchestration layer for complex business logic. These diagrams represent the live environment as deployed on WSO2 Choreo.
 
 ### Enterprise Resource Catalog (Native Graph)
 ![Choreo Catalog Graph](./images/choreo_catalog_graph.png)
 *Figure 1: Official Choreo Architecture Diagram showing project boundaries and service dependencies.*
 
-### High-Level Structural Design
+### Structural Design
 ![Choreo Project Overview](./images/choreo_overview.png)
-*Figure 2: Live Dependency Graph & Project Overview in WSO2 Choreo.*
+*Figure 2: Project overview and resource dependency graph within the Choreo environment.*
 
 ```mermaid
 graph TD
@@ -66,12 +66,12 @@ graph TD
     style Env fill:#f59e0b,color:#fff,stroke:#d97706
 ```
 
-### 📦 Component Management
+### Component Lifecycle and Management
 ![Choreo Components](./images/choreo_components.png)
-*Figure 2: Managed microservices status in the Choreo Console.*
+*Figure 2: Status of managed microservice components in the production console.*
 
-### Advanced Layer (Resilience & Observability)
-This view highlights the enterprise patterns implemented: **Timeouts**, **Retry Logic**, and **Distributed Logging**.
+### Infrastructure Resilience and Networking
+This view illustrates the implementation of timeouts, retry logic, and distributed logging patterns.
 
 ```mermaid
 graph LR
@@ -100,12 +100,12 @@ graph LR
     style Orch stroke-dasharray: 5 5
 ```
 
-### 🧪 API Testing & Flow
+### API Validation and System Flow
 ![Choreo Test Console](./images/choreo_test_console.png)
-*Figure 3: Testing the Order Orchestrator using the integrated OpenAPI console.*
+*Figure 3: System validation via the integrated OpenAPI testing interface.*
 
-### System Sequence Flow (POST /order)
-The following sequence flow details the exact lifecycle of a request, including the success and failure branches:
+### Request Lifecycle (POST /order)
+The following sequence details the lifecycle of an order request, including conditional branches for inventory and payment status.
 
 ```mermaid
 sequenceDiagram
@@ -142,51 +142,51 @@ sequenceDiagram
     end
 ```
 
-## ☁️ Cloud vs Local Deployment
+## Cloud Environment vs Local Infrastructure
 
-| Feature | WSO2 Choreo (Current) | Docker Compose (Standalone) |
-|---------|-----------------------|-----------------------------|
-| **Deployment** | Managed (Cloud) | Manual (Local/Any VM) |
-| **Networking** | Choreo Gateways | Private Docker Network |
-| **Scalability** | Automated | Configurable via Compose |
-| **Cost** | Free Tier Limits | Zero Cost (Open Source) |
+| Infrastructure Aspect | WSO2 Choreo (Cloud) | Docker Compose (Local) |
+|-----------------------|---------------------|-------------------------|
+| Deployment Model | Fully Managed | Container Orchestration |
+| Networking | Virtual API Gateway | Private Virtual Network |
+| Scalability | Automated Scaling | Vertical Static Limits |
+| Cost Model | Usage Based | Infrastructure Neutral |
 
-## 🚀 Getting Started
+## Deployment and Local Installation
 
 ### Prerequisites
-- Docker & Docker Compose installed on your machine.
+- Docker and Docker Compose must be installed on the host machine.
 
-### One-Command Run
-You can spin up the entire production-style system with a single command:
+### Execution Command
+The entire system can be initialized with a single command:
 ```bash
 docker-compose up --build
 ```
-This will:
-1. Build images for all 4 microservices using `Dockerfile`s.
-2. Initialize the private microservices network.
-3. Start healthchecks for backend services.
-4. Expose the Order Orchestrator on `localhost:8080`.
+This command performs the following operations:
+1. Builds local images for all microservices using the provided Dockerfiles.
+2. Establishes a private virtual network for container communication.
+3. Initiates health monitoring for dependent services.
+4. Exposes the Order Orchestrator on host port 8080.
 
-## 📊 Enterprise Observability & CI/CD
+## Observability and Automated CI/CD
 
-Our system utilizes WSO2 Choreo's advanced DevOps capabilities to ensure every deployment is secure, optimized, and verified.
+The system leverages the WSO2 Choreo DevOps suite to maintain high deployment quality and security.
 
-### 🛡️ Automated CI/CD & Security Scan
+### Automated Pipeline and Security Scanning
 ![Choreo Build Pipeline](./images/choreo_build_pipeline.png)
-*Figure 4: Automated build action including environment setup, containerization, and Trivy vulnerability scanning.*
+*Figure 4: Automated CI/CD pipeline including environment initialization, container build, and Trivy security auditing.*
 
-Every commit to the `main` branch triggers a multi-stage pipeline:
-1.  **Environment Setup**: Dynamic provisioning of build resources.
-2.  **Build Component**: Native Node.js build and optimization.
-3.  **Security Scan**: INTEGRATED **Trivy** vulnerability scanning for all container layers.
-4.  **Registry Push**: Versioned images pushed to the internal secure registry.
+Every commit to the main branch triggers the following lifecycle:
+1.  **Environment Provisioning**: Deployment of dynamic build resources.
+2.  **Container Compilation**: Building and optimizing Node.js images.
+3.  **Security Auditing**: Comprehensive scanning for vulnerabilities via Trivy.
+4.  **Registry Distribution**: Pushing versioned images to a private secure registry.
 
-## 🚀 API Demonstration Flow
+## API Interface and Specification
 
-### POST /order (Success Case)
+### POST /order (Verification Case)
 **Endpoint**: `http://localhost:8080/order`
 
-**Payload**:
+**Request Payload**:
 ```json
 {
   "userId": "1",
@@ -195,10 +195,10 @@ Every commit to the `main` branch triggers a multi-stage pipeline:
 }
 ```
 
-## 📊 Health Monitoring
-Each service provides a health status at `/health`:
-- `GET http://localhost:8081/health` (Mapping to user-service)
-- `GET http://localhost:8082/health` (Mapping to inventory-service)
+## System Health Monitoring
+All services provide real-time health diagnostics via the `/health` endpoint:
+- **User Service**: `GET http://localhost:8081/health`
+- **Inventory Service**: `GET http://localhost:8082/health`
 
 ---
-*Transformed from Choreo-native to Open Source Standalone by Perera1325.*
+*Standalone architecture and system transformation by Perera1325.*
