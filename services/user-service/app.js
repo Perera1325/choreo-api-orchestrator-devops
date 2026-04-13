@@ -1,6 +1,7 @@
-echo "const express = require('express');
+const express = require('express');
 const app = express();
-const PORT = 8080;
+
+const PORT = process.env.PORT || 8080;
 
 app.get('/', (req, res) => {
   res.send('User Service Running');
@@ -11,5 +12,5 @@ app.get('/user', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(\`User Service running on port \${PORT}\`);
-});" > app.js
+  console.log(`User Service running on port ${PORT}`);
+});
